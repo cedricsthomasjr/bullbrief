@@ -3,6 +3,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import TradingViewMiniChart from "@/app/components/TradingViewMiniChart";
+import SWOTCard from "@/app/components/SWOTCard";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import LoadingScreen from "@/app/components/LoadingScreen"; // ⬅️ Add this import
+import StockChartToggle from "@/app/components/StockChartToggle";
 
 type BackendSummary = {
   company_name: string;
@@ -42,15 +47,23 @@ export default function TickerPage() {
   }, [ticker]);
 
   if (loading)
-    return <p className="text-white p-8 text-center animate-pulse">Loading...</p>;
+    return <LoadingScreen isLoading={loading} />;    
   if (error)
     return <p className="text-red-500 p-8 text-center">Error: {error}</p>;
   if (!data) return null;
 
   return (
     <main className="min-h-screen bg-black text-white px-6 md:px-16 py-24 font-sans space-y-16">
+        
       {/* Header */}
       <section className="space-y-4">
+      <Link
+  href="/"
+  className="inline-flex items-center text-sm text-blue-400 hover:text-blue-200 transition mb-4"
+>
+  <ArrowLeft className="w-4 h-4 mr-2" />
+  Back to Home
+</Link>
         <h1 className="text-4xl font-extrabold text-blue-400 tracking-tight">
           {data.company_name} <span className="text-white">({data.ticker})</span>
         </h1>
@@ -74,7 +87,7 @@ export default function TickerPage() {
       <section>
         <h2 className="text-2xl font-semibold text-blue-300 mb-4">📈 Stock Performance</h2>
         <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-4">
-          <TradingViewMiniChart symbol={`NASDAQ:${data.ticker}`} />
+        <StockChartToggle symbol={`NASDAQ:${data.ticker}`} />
         </div>
       </section>
 
@@ -87,12 +100,8 @@ export default function TickerPage() {
       </section>
 
       {/* SWOT */}
-      <section>
-        <h2 className="text-2xl font-semibold text-blue-300 mb-4">🧠 SWOT Analysis</h2>
-        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-sm leading-relaxed text-gray-100 whitespace-pre-wrap">
-          {data.swot}
-        </div>
-      </section>
+      <SWOTCard content={data.swot} />
+
 
       {/* Outlook */}
       <section>

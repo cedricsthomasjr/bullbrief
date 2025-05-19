@@ -120,3 +120,29 @@
     @apply bg-background text-foreground;
   }
 }
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradientShift 10s ease infinite;
+}
+@keyframes pulseBackground {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+.animate-pulse {
+  animation: pulseBackground 12s ease-in-out infinite;
+  background-size: 400% 400%;
+}
