@@ -5,6 +5,7 @@ import os
 from openai import OpenAI
 import yfinance as yf
 import re
+import requests
 
 load_dotenv()
 
@@ -44,10 +45,6 @@ def normalize_section_name(name):
     return name.title()
 
 def split_sections(text):
-    """
-    Parses GPT output using flexible section headings.
-    Works for `---`, colons, and markdown-style headers.
-    """
     pattern = r"(?:^|\n)(#{1,3}|\*+)?\s*(Business Summary|SWOT(?: Analysis)?|Outlook)\s*[:\-–]*\s*\n"
     matches = list(re.finditer(pattern, text, re.IGNORECASE))
 
@@ -66,6 +63,21 @@ def split_sections(text):
 
     return sections
 
+def map_to_tradingview_exchange(raw_exchange):
+    exchange_map = {
+        "NYQ": "NYSE",
+        "NYE": "NYSE",
+        "NYS": "NYSE",
+        "NMS": "NASDAQ",
+        "NAS": "NASDAQ",
+        "NGM": "NASDAQ",
+        "ASE": "AMEX",
+        "AMX": "AMEX",
+        "PCX": "AMEX"
+
+    }
+    return exchange_map.get(raw_exchange.upper(), "NASDAQ")
+
 @app.route("/summary/<ticker>")
 def get_summary(ticker):
     try:
@@ -77,6 +89,9 @@ def get_summary(ticker):
         market_cap = info.get("marketCap", "")
         pe_ratio = info.get("trailingPE", "")
         range_52w = f"{info.get('fiftyTwoWeekLow')} - {info.get('fiftyTwoWeekHigh')}"
+        raw_exchange = info.get("exchange", "NAS")  # Fallback to NAS if unknown
+        tradingview_exchange = map_to_tradingview_exchange(raw_exchange)
+        exchange_symbol = f"{tradingview_exchange}:{ticker.upper()}"
 
         prompt = generate_prompt(company_name, ticker.upper(), sector, market_cap, pe_ratio, range_52w)
 
@@ -91,16 +106,13 @@ def get_summary(ticker):
         )
 
         summary_text = response.choices[0].message.content.strip()
-
-        print("📦 RAW GPT OUTPUT ↓↓↓\n")
-        print(summary_text)
-        print("\n========================\n")
-
         section_map = split_sections(summary_text)
 
         return jsonify({
             "company_name": company_name,
             "ticker": ticker.upper(),
+            "exchange": raw_exchange,
+            "exchange_symbol": exchange_symbol,
             "business_summary": section_map.get("Business Summary", ""),
             "swot": section_map.get("SWOT", ""),
             "outlook": section_map.get("Outlook", ""),
@@ -108,18 +120,32 @@ def get_summary(ticker):
             "pe_ratio": pe_ratio,
             "range_52w": range_52w,
             "sector": sector,
-            "raw_summary": summary_text  # <- for debug inspection
+            "current_price": info.get("currentPrice"),
+            "eps_ttm": info.get("trailingEps"),
+            "forward_pe": info.get("forwardPE"),
+            "dividend_yield": info.get("dividendYield"),
+            "beta": info.get("beta"),
+            "volume": info.get("volume"),
+            "avg_volume": info.get("averageVolume"),
+            "peg_ratio": info.get("pegRatio"),
+            "price_to_sales": info.get("priceToSalesTrailing12Months"),
+            "price_to_book": info.get("priceToBook"),
+            "roe": info.get("returnOnEquity"),
+            "free_cashflow": info.get("freeCashflow"),
+            "debt_to_equity": info.get("debtToEquity"),
+            "profit_margin": info.get("profitMargins"),
+            "institutional_ownership": info.get("heldPercentInstitutions"),
+            "short_percent": info.get("shortPercentOfFloat"),
+            "raw_summary": summary_text
         })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-import requests
 
 @app.route("/news/<ticker>")
 def get_stock_news(ticker):
     try:
         news_api_key = os.getenv("NEWS_API_KEY")
-
         url = "https://newsapi.org/v2/everything"
         params = {
             "q": ticker,

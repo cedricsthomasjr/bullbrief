@@ -8,10 +8,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import LoadingScreen from "@/app/components/LoadingScreen"; // ⬅️ Add this import
 import StockChartToggle from "@/app/components/StockChartToggle";
+import FinancialMetricsGrid from "@/app/components/FinancialMetricsGrid";
 
 type BackendSummary = {
   company_name: string;
   ticker: string;
+  exchange: string; // ← new
+  exchange_symbol: string; // ← new
   business_summary: string;
   swot: string;
   outlook: string;
@@ -19,7 +22,25 @@ type BackendSummary = {
   pe_ratio: number;
   range_52w: string;
   sector: string;
+  current_price: number;
+  eps_ttm: number;
+  forward_pe: number;
+  dividend_yield: number;
+  beta: number;
+  volume: number;
+  avg_volume: number;
+  peg_ratio: number;
+  price_to_sales: number;
+  price_to_book: number;
+  roe: number;
+  free_cashflow: number;
+  debt_to_equity: number;
+  profit_margin: number;
+  institutional_ownership: number;
+  short_percent: number;
+  raw_summary: string;
 };
+
 
 export default function TickerPage() {
   const { ticker } = useParams();
@@ -103,7 +124,7 @@ export default function TickerPage() {
       <section>
         <h2 className="text-2xl font-semibold text-blue-300 mb-4">📈 Stock Performance</h2>
         <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-4">
-        <StockChartToggle symbol={`NASDAQ:${data.ticker}`} />
+        <StockChartToggle symbol={data.exchange_symbol} />
         </div>
       </section>
 
@@ -125,33 +146,38 @@ export default function TickerPage() {
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-sm leading-relaxed text-gray-100 whitespace-pre-wrap">
           {data.outlook}
         </div>
+        
       </section>
+      {/* Financial Metrics */}
+      <section>
+        <FinancialMetricsGrid data={data} />  
+      </section>
+
       {/* News Section */}
-<section>
-  <h2 className="text-2xl font-semibold text-blue-300 mb-4">📰 Recent News</h2>
-  {news.length === 0 ? (
-    <p className="text-gray-400 text-sm">No recent news found.</p>
-  ) : (
-    <div className="grid gap-4">
-      {news.map((item, idx) => (
-        <a
-          key={idx}
-          href={item.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-blue-400 transition"
-        >
-          <p className="text-sm text-white font-semibold mb-1">{item.title}</p>
-          <p className="text-xs text-gray-400">
-            {item.publisher} •{" "}
-            {new Date(item.providerPublishTime).toLocaleDateString()}
-          </p>
-        </a>
-      ))}
+      <section>
+        <h2 className="text-2xl font-semibold text-blue-300 mb-4">📰 Recent News</h2>
+          {news.length === 0 ? (
+            <p className="text-gray-400 text-sm">No recent news found.</p>
+            ) : (
+              <div className="grid gap-4">
+            {news.map((item, idx) => (
+            <a
+              key={idx}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            className="block bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-blue-400 transition"
+            >
+            <p className="text-sm text-white font-semibold mb-1">{item.title}</p>
+            <p className="text-xs text-gray-400">
+              {item.publisher} •{" "}
+              {new Date(item.providerPublishTime).toLocaleDateString()}
+            </p>
+          </a>
+        ))}
     </div>
   )}
 </section>
-
-    </main>
+</main>
   );
 }
