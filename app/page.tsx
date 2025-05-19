@@ -44,9 +44,10 @@ export default function HomePage() {
         </motion.p>
 
         {/* Form */}
-   
-<TickerInput />
-
+        <main className="justify-center">
+ 
+  <TickerInput />
+</main>
       </div>
     </main>
   );
