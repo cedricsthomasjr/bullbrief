@@ -81,7 +81,7 @@ def get_summary(ticker):
         prompt = generate_prompt(company_name, ticker.upper(), sector, market_cap, pe_ratio, range_52w)
 
         response = client.chat.completions.create(
-            model="gpt-4.1-nano",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful financial analyst."},
                 {"role": "user", "content": prompt}
