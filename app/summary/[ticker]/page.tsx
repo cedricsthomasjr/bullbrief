@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import TradingViewMiniChart from "@/app/components/TradingViewMiniChart";
 
 type BackendSummary = {
   company_name: string;
   ticker: string;
-  summary: string;
+  business_summary: string;
+  swot: string;
+  outlook: string;
   market_cap: number;
   pe_ratio: number;
   range_52w: string;
@@ -38,22 +41,66 @@ export default function TickerPage() {
     fetchData();
   }, [ticker]);
 
-  if (loading) return <p className="text-white p-8">Loading...</p>;
-  if (error) return <p className="text-red-500 p-8">Error: {error}</p>;
+  if (loading)
+    return <p className="text-white p-8 text-center animate-pulse">Loading...</p>;
+  if (error)
+    return <p className="text-red-500 p-8 text-center">Error: {error}</p>;
   if (!data) return null;
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-24">
-      <h1 className="text-3xl font-bold mb-4 text-blue-400">
-        {data.company_name} ({data.ticker})
-      </h1>
+    <main className="min-h-screen bg-black text-white px-6 md:px-16 py-24 font-sans space-y-16">
+      {/* Header */}
+      <section className="space-y-4">
+        <h1 className="text-4xl font-extrabold text-blue-400 tracking-tight">
+          {data.company_name} <span className="text-white">({data.ticker})</span>
+        </h1>
+        <div className="flex flex-wrap gap-4 text-sm text-gray-300">
+          <span className="bg-zinc-800 px-3 py-1 rounded-full">
+            Sector: <span className="text-white">{data.sector}</span>
+          </span>
+          <span className="bg-zinc-800 px-3 py-1 rounded-full">
+            Market Cap: ${Number(data.market_cap).toLocaleString()}
+          </span>
+          <span className="bg-zinc-800 px-3 py-1 rounded-full">
+            P/E Ratio: {data.pe_ratio}
+          </span>
+          <span className="bg-zinc-800 px-3 py-1 rounded-full">
+            52W Range: {data.range_52w}
+          </span>
+        </div>
+      </section>
 
-      <p className="text-sm text-gray-400 mb-4">
-        Sector: {data.sector} | Market Cap: ${Number(data.market_cap).toLocaleString()} | P/E: {data.pe_ratio} | 52W Range: {data.range_52w}
-      </p>
+      {/* Chart */}
+      <section>
+        <h2 className="text-2xl font-semibold text-blue-300 mb-4">📈 Stock Performance</h2>
+        <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-4">
+          <TradingViewMiniChart symbol={`NASDAQ:${data.ticker}`} />
+        </div>
+      </section>
 
-      <h2 className="text-xl text-blue-300 font-semibold mt-10 mb-2">Raw Summary</h2>
-      <pre className="text-sm text-gray-100 whitespace-pre-wrap">{data.summary}</pre>
+      {/* Business Summary */}
+      <section>
+        <h2 className="text-2xl font-semibold text-blue-300 mb-4">📌 Business Summary</h2>
+        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-sm leading-relaxed text-gray-100 whitespace-pre-wrap">
+          {data.business_summary}
+        </div>
+      </section>
+
+      {/* SWOT */}
+      <section>
+        <h2 className="text-2xl font-semibold text-blue-300 mb-4">🧠 SWOT Analysis</h2>
+        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-sm leading-relaxed text-gray-100 whitespace-pre-wrap">
+          {data.swot}
+        </div>
+      </section>
+
+      {/* Outlook */}
+      <section>
+        <h2 className="text-2xl font-semibold text-blue-300 mb-4">🔮 Outlook</h2>
+        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-sm leading-relaxed text-gray-100 whitespace-pre-wrap">
+          {data.outlook}
+        </div>
+      </section>
     </main>
   );
 }
