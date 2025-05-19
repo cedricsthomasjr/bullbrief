@@ -26,6 +26,14 @@ export default function TickerPage() {
   const [data, setData] = useState<BackendSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [news, setNews] = useState<
+  {
+    title: string;
+    publisher: string;
+    link: string;
+    providerPublishTime: string;
+  }[]
+>([]);
 
   useEffect(() => {
     if (!ticker) return;
@@ -41,6 +49,14 @@ export default function TickerPage() {
       } finally {
         setLoading(false);
       }
+      try {
+        const res = await fetch(`http://localhost:8000/news/${ticker}`);
+        const json = await res.json();
+        setNews(json.news || []);
+      } catch (err) {
+        console.error("Failed to fetch news:", err);
+      }
+      
     };
 
     fetchData();
@@ -110,6 +126,32 @@ export default function TickerPage() {
           {data.outlook}
         </div>
       </section>
+      {/* News Section */}
+<section>
+  <h2 className="text-2xl font-semibold text-blue-300 mb-4">📰 Recent News</h2>
+  {news.length === 0 ? (
+    <p className="text-gray-400 text-sm">No recent news found.</p>
+  ) : (
+    <div className="grid gap-4">
+      {news.map((item, idx) => (
+        <a
+          key={idx}
+          href={item.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-blue-400 transition"
+        >
+          <p className="text-sm text-white font-semibold mb-1">{item.title}</p>
+          <p className="text-xs text-gray-400">
+            {item.publisher} •{" "}
+            {new Date(item.providerPublishTime).toLocaleDateString()}
+          </p>
+        </a>
+      ))}
+    </div>
+  )}
+</section>
+
     </main>
   );
 }
