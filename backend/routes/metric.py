@@ -13,8 +13,11 @@ def get_metric_data(ticker, metric):
         data = get_eps_data(ticker)
     elif metric == "revenue":
         data = get_metric_from_income_statement(ticker, "revenue")
+    elif metric == "gross-profit":
+        data = get_metric_from_income_statement(ticker, "grossProfit")
     else:
-        return jsonify({"error": f"Metric '{metric}' is not supported."}), 400
+        return jsonify({"error": "Unsupported metric"}), 400
+
 
     if isinstance(data, str):
         return jsonify({"error": data}), 500
@@ -24,3 +27,5 @@ def get_metric_data(ticker, metric):
         "metric": metric,
         "data": data
     })
+def get_gross_profit(ticker: str):
+    return get_metric_from_income_statement(ticker, "grossProfit")

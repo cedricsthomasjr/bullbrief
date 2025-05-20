@@ -29,3 +29,5 @@ def get_metric_from_income_statement(ticker: str, metric_field: str):
 
     except Exception as e:
         return f"Error: {str(e)}"
+def get_gross_profit(ticker: str):
+    return get_metric_from_income_statement(ticker, "grossProfit")
