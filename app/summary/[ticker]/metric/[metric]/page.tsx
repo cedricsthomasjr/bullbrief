@@ -8,43 +8,55 @@ import LoadingScreen from "@/app/components/LoadingScreen";
 export default function MetricDetailPage() {
   const { ticker, metric } = useParams() as { ticker: string; metric: string };
   const [aiSummary, setAiSummary] = useState<string | null>(null);
-
   const [data, setData] = useState<{ year: number; value: number }[] | null>(null);
   const lastGoodData = useRef<{ year: number; value: number }[] | null>(null);
-
   const [dataLoading, setDataLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(true);
 
   useEffect(() => {
     if (!ticker || !metric) return;
-
+  
     const fetchData = async () => {
       setDataLoading(true);
       try {
-        const res = await fetch(`http://localhost:8000/macrotrends/${ticker}`);
+        const endpoint =
+          ["eps", "revenue"].includes(metric.toLowerCase())
+            ? `http://localhost:8000/metric/${ticker}/${metric}` // <— use new clean route
+            : `http://localhost:8000/macrotrends/${ticker}`;
+  
+        const res = await fetch(endpoint);
         const json = await res.json();
-
-        const metricKey = Object.keys(json.data).find(
-          (k) => k.toLowerCase() === metric.toLowerCase()
-        );
-
-        if (metricKey && Array.isArray(json.data[metricKey])) {
-          lastGoodData.current = json.data[metricKey];
-          setData(json.data[metricKey]);
+  
+        let extractedData = null;
+  
+        if (["eps", "revenue"].includes(metric.toLowerCase())) {
+          extractedData = json.data;
         } else {
-          console.warn(`Metric "${metric}" not found in scraped data`);
-          setData(lastGoodData.current); // fallback to last known good
+          const metricKey = Object.keys(json.data).find(
+            (k) => k.toLowerCase() === metric.toLowerCase()
+          );
+          extractedData = metricKey && Array.isArray(json.data[metricKey])
+            ? json.data[metricKey]
+            : null;
+        }
+  
+        if (extractedData) {
+          lastGoodData.current = extractedData;
+          setData(extractedData);
+        } else {
+          setData(lastGoodData.current);
         }
       } catch (e) {
         console.error("Failed to fetch metric data:", e);
-        setData(lastGoodData.current); // fallback
+        setData(lastGoodData.current);
       } finally {
         setDataLoading(false);
       }
     };
-
+  
     fetchData();
   }, [ticker, metric]);
+  
 
   useEffect(() => {
     if (!ticker || !metric) return;

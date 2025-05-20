@@ -8,7 +8,6 @@ HEADERS = {
 }
 
 METRICS = {
-    "Revenue": "revenue",
     "Gross Profit": "gross-profit",
     "Operating Income": "operating-income",
     "Net Income": "net-income",

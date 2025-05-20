@@ -1,28 +1,11 @@
-import requests
-from flask import Flask, jsonify
-from flask import Blueprint
+from flask import Blueprint, jsonify
+from utils.eps import get_eps_data
 
-from dotenv import load_dotenv
-import os
+eps_router = Blueprint("eps", __name__)
 
-load_dotenv()
-FMP_API_KEY = os.getenv("FMP_API_KEY")
-eps_bp = Blueprint("eps", __name__)
-
-
-@eps_bp.route("/eps-history/<ticker>")
-def get_eps_history(ticker):
-    url = f"https://financialmodelingprep.com/api/v3/income-statement/{ticker}?limit=20&apikey={FMP_API_KEY}"
-    response = requests.get(url)
-    data = response.json()
-
-    eps_data = [
-        {"year": item["calendarYear"], "eps": item["epsdiluted"]}
-        for item in data
-        if "calendarYear" in item and "epsdiluted" in item
-    ]
-
-    # Optional: sort by year descending
-    eps_data = sorted(eps_data, key=lambda x: x["year"], reverse=True)
-
-    return jsonify({"ticker": ticker.upper(), "eps_history": eps_data})
+@eps_router.route("/eps/<ticker>", methods=["GET"])
+def eps_route(ticker):
+    data = get_eps_data(ticker.upper())
+    if isinstance(data, str):  # error string
+        return jsonify({"error": data}), 500
+    return jsonify({"ticker": ticker.upper(), "metric": "EPS", "data": data})
