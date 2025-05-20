@@ -31,8 +31,8 @@ const funFacts = [
     "📚 Long-term investing tends to outperform short-term trading for most investors.",
   ];
 
-export default function LoadingScreen({ isLoading }: { isLoading: boolean }) {
-  const [currentFactIndex, setCurrentFactIndex] = useState(0);
+  export default function LoadingScreen({ isLoading = true }: { isLoading?: boolean }) {
+    const [currentFactIndex, setCurrentFactIndex] = useState(0);
 
   useEffect(() => {
     if (!isLoading) return;

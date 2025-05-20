@@ -1,9 +1,7 @@
-// /app/components/FinancialMetricsGrid.tsx
-
 "use client";
 
+import { useState } from "react";
 import {
-  DollarSign,
   BarChart3,
   TrendingUp,
   PieChart,
@@ -21,6 +19,8 @@ import {
 } from "lucide-react";
 
 import { formatFixed, formatNumber, formatPercent } from "@/lib/format";
+import EPSChartModal from "@/app/components/EPSChartModal";
+
 type BackendSummary = {
   company_name: string;
   ticker: string;
@@ -50,8 +50,9 @@ type BackendSummary = {
   raw_summary: string;
 };
 
-
 export default function FinancialMetricsGrid({ data }: { data: BackendSummary }) {
+  const [showModal, setShowModal] = useState(false);
+
   const metricGroups = [
     {
       title: "💸 Valuation Metrics",
@@ -86,7 +87,7 @@ export default function FinancialMetricsGrid({ data }: { data: BackendSummary })
   ];
 
   return (
-<section className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <section className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
       <h2 className="text-2xl justify-center font-semibold text-blue-300 flex items-center gap-2">
         📊 Key Financial Metrics
       </h2>
@@ -95,20 +96,39 @@ export default function FinancialMetricsGrid({ data }: { data: BackendSummary })
         <div key={groupIdx} className="space-y-4">
           <h3 className="text-lg font-bold text-blue-200">{group.title}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-            {group.metrics.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-zinc-900 p-4 rounded-xl border border-zinc-700 hover:border-blue-500 transition duration-200"
-              >
-                <p className="text-gray-400 text-xs">{item.label}</p>
-                <p className="text-white text-lg font-semibold flex items-center gap-2 mt-1">
-                  {item.icon} {item.value}
-                </p>
-              </div>
-            ))}
+            {group.metrics.map((item, idx) => {
+              const isEPS = item.label === "EPS (TTM)";
+              return (
+                <div
+                  key={idx}
+                  className="relative group bg-zinc-900 p-4 rounded-xl border border-zinc-700 hover:border-blue-500 transition duration-200"
+                >
+                  <p className="text-gray-400 text-xs">{item.label}</p>
+                  <p className="text-white text-lg font-semibold flex items-center gap-2 mt-1">
+                    {item.icon} {item.value}
+                  </p>
+
+                  {isEPS && (
+                    <button
+                      onClick={() => setShowModal(true)}
+                      className="absolute top-2 right-2 text-[11px] px-2 py-1 rounded-full border border-blue-400 text-blue-400 bg-black bg-opacity-60 group-hover:opacity-100 opacity-0 transition"
+                    >
+                      View Chart
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}
+
+      {showModal && (
+        <EPSChartModal
+          ticker={data.ticker}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </section>
   );
 }

@@ -9,6 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import LoadingScreen from "@/app/components/LoadingScreen"; // ⬅️ Add this import
 import StockChartToggle from "@/app/components/StockChartToggle";
 import FinancialMetricsGrid from "@/app/components/FinancialMetricsGrid";
+import ExecutiveGrid from "@/app/components/ExecutiveGrid";
 
 type BackendSummary = {
   company_name: string;
@@ -55,6 +56,9 @@ export default function TickerPage() {
     providerPublishTime: string;
   }[]
 >([]);
+const [execs, setExecs] = useState<
+  { name: string; title: string; pay: string }[]
+>([]);
 
   useEffect(() => {
     if (!ticker) return;
@@ -77,6 +81,14 @@ export default function TickerPage() {
       } catch (err) {
         console.error("Failed to fetch news:", err);
       }
+      try {
+        const res = await fetch(`http://localhost:8000/executives/${ticker}`);
+        const json = await res.json();
+        setExecs(json.executives || []);
+      } catch (err) {
+        console.error("Failed to fetch executives:", err);
+      }
+      
       
     };
 
@@ -127,6 +139,13 @@ export default function TickerPage() {
         <StockChartToggle symbol={data.exchange_symbol} />
         </div>
       </section>
+      <Link href={`/summary/${ticker}/metric/revenue`}>
+      <button className="bg-zinc-800 px-4 py-2 rounded-lg hover:bg-blue-600 transition">Revenue</button>
+      </Link>
+      <Link href={`/summary/${ticker}/metric/eps`}>
+        <button className="bg-zinc-800 px-4 py-2 rounded-lg hover:bg-blue-600 transition">EPS</button>
+      </Link>
+
 
       {/* Business Summary */}
       <section>
@@ -178,6 +197,7 @@ export default function TickerPage() {
     </div>
   )}
 </section>
+{execs.length > 0 && <ExecutiveGrid execs={execs} />}
 </main>
   );
 }
