@@ -16,15 +16,19 @@ def interpret_metric(ticker):
     slug = resolve_slug(ticker)
     data = scrape_macrotrends(ticker.upper(), slug)
 
-    metric_data = data.get(metric)
-    if not metric_data or not isinstance(metric_data, list):
-        return jsonify({"error": f"No valid data found for metric '{metric}'"}), 404
+    # Normalize the metric key (case-insensitive match)
+    matched_key = next((k for k in data.keys() if k.lower() == metric.lower()), None)
+
+    if not matched_key or not isinstance(data[matched_key], list):
+        return jsonify({ "error": f"No valid data found for metric '{metric}'" }), 404
+
+    metric_data = data[matched_key]  # ✅ THIS LINE MUST BE OUTSIDE THE 'if'
 
     # Format data string: "2024: 500, 2023: 450, ..."
     trend_string = ", ".join(f"{row['year']}: {row['value']}" for row in metric_data[:10])
 
     prompt = f"""
-You are a financial analyst. Interpret the trend in the {metric} data for {ticker.upper()} using the values below:
+You are a financial analyst. Interpret the trend in the {matched_key} data for {ticker.upper()} using the values below:
 
 {trend_string}
 
@@ -32,7 +36,7 @@ Describe key changes, notable spikes or dips, and what it might mean for investo
 """
 
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
 
