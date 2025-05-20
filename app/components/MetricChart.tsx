@@ -22,9 +22,10 @@ const formatNumber = (num: number) => {
 };
 
 type Props = {
-  data: { year: number; value: number }[];
-  title: string;
-};
+    data: { year: number; value: number }[] | null;
+    title: string;
+  };
+  
 
 export default function MetricChart({ data, title }: Props) {
   if (!data || !Array.isArray(data) || data.length === 0) {

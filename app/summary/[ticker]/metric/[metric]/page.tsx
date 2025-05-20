@@ -7,32 +7,44 @@ import LoadingScreen from "@/app/components/LoadingScreen";
 
 export default function MetricDetailPage() {
   const { ticker, metric } = useParams() as { ticker: string; metric: string };
-  const [data, setData] = useState<any[]>([]);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+ 
+  const [data, setData] = useState<{ year: number; value: number }[] | null>(null);
+  const [hasFetched, setHasFetched] = useState(false); // NEW
+  
   useEffect(() => {
     if (!ticker || !metric) return;
-
+  
     const fetchData = async () => {
-      const res = await fetch(`http://localhost:8000/macrotrends/${ticker}`);
-      const json = await res.json();
-
-      const metricKey = Object.keys(json.data).find(
-        (k) => k.toLowerCase() === metric.toLowerCase()
-      );
-
-      if (!metricKey || !Array.isArray(json.data[metricKey])) {
-        setData([]);
-      } else {
-        setData(json.data[metricKey]);
+      setLoading(true);
+      try {
+        const res = await fetch(`http://localhost:8000/macrotrends/${ticker}`);
+        const json = await res.json();
+  
+        const metricKey = Object.keys(json.data).find(
+          (k) => k.toLowerCase() === metric.toLowerCase()
+        );
+  
+        if (metricKey && Array.isArray(json.data[metricKey])) {
+          setData(json.data[metricKey]);
+        } else {
+          setData(null);
+          console.warn(`Metric "${metric}" not found in scraped data`);
+        }
+      } catch (e) {
+        console.error("Failed to fetch metric data:", e);
+        setData(null);
+      } finally {
+        setLoading(false);
+        setHasFetched(true); // ✅ even if failed, count as fetched
       }
-
-      setLoading(false); // ✅ Chart shows now
     };
-
+  
     fetchData();
   }, [ticker, metric]);
+  
 
   useEffect(() => {
     if (!ticker || !metric) return;

@@ -28,12 +28,13 @@ def interpret_metric(ticker):
     trend_string = ", ".join(f"{row['year']}: {row['value']}" for row in metric_data[:10])
 
     prompt = f"""
-You are a financial analyst. Interpret the trend in the {matched_key} data for {ticker.upper()} using the values below:
+You are a financial analyst. Briefly summarize the {metric} trend for {ticker.upper()} from the following data:
 
 {trend_string}
 
-Describe key changes, notable spikes or dips, and what it might mean for investors.
+Use clear, simple language. Focus on direction, key jumps, and investor relevance. Limit to 4 bullet points max.
 """
+
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
