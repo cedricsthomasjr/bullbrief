@@ -44,10 +44,18 @@ export default function HomePage() {
         </motion.p>
 
         {/* Form */}
-        <main className="justify-center">
+        
  
   <TickerInput />
-</main>
+  <motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.97 }}
+  onClick={() => router.push("/compare")}
+  className="mt-4 bg-blue-700 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 shadow-md"
+>
+  Compare Companies
+</motion.button>
+
       </div>
     </main>
   );

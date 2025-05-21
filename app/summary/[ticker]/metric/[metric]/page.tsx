@@ -12,6 +12,10 @@ export default function MetricDetailPage() {
   const lastGoodData = useRef<{ year: number; value: number }[] | null>(null);
   const [dataLoading, setDataLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(true);
+  const bulletPoints = aiSummary
+  ?.split("\n")
+  .filter((line) => line.trim().startsWith("-"))
+  .map((line) => line.replace(/^- /, "").trim());
 
   useEffect(() => {
     if (!ticker || !metric) return;
@@ -80,21 +84,38 @@ export default function MetricDetailPage() {
   if (dataLoading) return <LoadingScreen />;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 text-white space-y-6">
-      <h1 className="text-3xl font-bold capitalize">{metric} – {ticker}</h1>
+<div className="max-w-5xl mx-auto px-6 pt-24 pb-12 text-white space-y-10">
+  <h1 className="text-4xl font-bold capitalize tracking-tight">
+    {metric} – {ticker}
+  </h1>
 
-      <MetricChart data={data} title={metric} />
+  {/* Chart Section */}
+  <section className="space-y-6">
+    <MetricChart data={data} title={metric} />
+  </section>
 
-      <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-700 shadow-lg min-h-[180px]">
-        <h2 className="text-xl font-semibold mb-2">AI Interpretation</h2>
-        {summaryLoading ? (
-          <p className="text-gray-500 italic animate-pulse">Generating summary...</p>
-        ) : aiSummary ? (
-          <p className="text-gray-300 whitespace-pre-line">{aiSummary}</p>
-        ) : (
-          <p className="text-red-500 italic">Could not generate summary.</p>
-        )}
+  {/* AI Interpretation Section */}
+  <section className="space-y-6">
+    <h2 className="text-2xl font-semibold text-white tracking-tight">🧠 AI Interpretation</h2>
+
+    {summaryLoading ? (
+      <p className="text-gray-500 italic animate-pulse">Generating summary...</p>
+    ) : bulletPoints && bulletPoints.length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {bulletPoints.map((point, idx) => {
+          const [title, ...rest] = point.split(":");
+          return (
+            <div key={idx} className="bg-zinc-900 border border-zinc-700 p-5 rounded-xl shadow hover:shadow-md transition">
+              <p className="text-blue-400 font-semibold mb-1">{title}</p>
+              <p className="text-gray-300 text-sm leading-relaxed">{rest.join(":").trim()}</p>
+            </div>
+          );
+        })}
       </div>
-    </div>
+    ) : (
+      <p className="text-red-500 italic">Could not generate summary.</p>
+    )}
+  </section>
+</div>
   );
 }

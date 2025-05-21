@@ -73,3 +73,46 @@ def get_summary(ticker):
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+from flask import Blueprint, jsonify
+import yfinance as yf
+from openai import OpenAI
+
+summary_single_bp = Blueprint("summary_single", __name__)
+client = OpenAI()
+
+@summary_single_bp.route("/summary-single/<ticker>", methods=["GET"])
+def summary_single(ticker):
+    try:
+        stock = yf.Ticker(ticker.upper())
+        info = stock.info
+
+        if not info or "shortName" not in info:
+            return jsonify({"error": "Invalid ticker"}), 400
+
+        def safe(val):
+            return round(val, 6) if isinstance(val, (int, float)) else None
+
+        pe = safe(info.get("trailingPE"))
+        roe = safe(info.get("returnOnEquity"))
+        margin = safe(info.get("profitMargins"))
+
+        prompt = f"Summarize the financial performance of {info.get('shortName')} ({ticker.upper()}): PE={pe}, ROE={roe}, Margin={margin}."
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        return jsonify({
+            "ticker": ticker.upper(),
+            "company_name": info.get("shortName"),
+            "market_cap": safe(info.get("marketCap")),
+            "pe_ratio": pe,
+            "roe": roe,
+            "profit_margin": margin,
+            "ai_summary": response.choices[0].message.content
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

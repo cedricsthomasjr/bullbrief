@@ -139,12 +139,23 @@ const [execs, setExecs] = useState<
         <StockChartToggle symbol={data.exchange_symbol} />
         </div>
       </section>
-      <Link href={`/summary/${ticker}/metric/revenue`}>
-      <button className="bg-zinc-800 px-4 py-2 rounded-lg hover:bg-blue-600 transition">Revenue</button>
-      </Link>
-      <Link href={`/summary/${ticker}/metric/eps`}>
-        <button className="bg-zinc-800 px-4 py-2 rounded-lg hover:bg-blue-600 transition">EPS</button>
-      </Link>
+      <section>
+  <h2 className="text-2xl font-semibold text-blue-300 mb-4">📊 Explore Metrics</h2>
+  <div className="flex gap-4 flex-wrap">
+    <Link href={`/summary/${ticker}/metric/revenue`}>
+      <button className="bg-zinc-800 px-5 py-2 rounded-lg text-sm hover:bg-blue-600 transition text-white border border-zinc-700 shadow-sm">
+        Revenue
+      </button>
+    </Link>
+    <Link href={`/summary/${ticker}/metric/eps`}>
+      <button className="bg-zinc-800 px-5 py-2 rounded-lg text-sm hover:bg-blue-600 transition text-white border border-zinc-700 shadow-sm">
+        EPS
+      </button>
+    </Link>
+    {/* You can keep adding buttons here as you build more metrics */}
+  </div>
+</section>
+
 
 
       {/* Business Summary */}
