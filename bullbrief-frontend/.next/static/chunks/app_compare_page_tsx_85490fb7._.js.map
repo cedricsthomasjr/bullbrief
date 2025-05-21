@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/cjthomas/Desktop/CSPersonal/bullbrief/bullbrief-frontend/app/compare/page.tsx"],"sourcesContent":["\"use client\";\n\nimport TripleTickerCompare from \"@/bullbrief-frontend/app/components/TripleTickerCompare\";\n\nexport default function ComparePage() {\n  return (\n    <main className=\"min-h-screen px-6 py-12 bg-black text-white\">\n      <h1 className=\"text-4xl font-bold mb-8 text-blue-400 text-center\">Deep Compare</h1>\n      <TripleTickerCompare />\n    </main>\n  );\n}\n"],"names":[],"mappings":";;;;;;;;;AAAA;;;AAIe,SAAS;IACtB,qBACE,6LAAC;QAAK,WAAU;;0BACd,6LAAC;gBAAG,WAAU;0BAAoD;;;;;;0BAClE,6LAAC;;;;;;;;;;;AAGP;KAPwB","debugId":null}}]
+}
