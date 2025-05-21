@@ -38,4 +38,10 @@ export type SingleSummaryData = {
   ai_summary: string;
 };
 
-  
+export type InsightSection = {
+  ticker: string;
+  valuation: string;
+  profitability: string;
+  margins: string;
+  outlook: string;
+};
