@@ -481,66 +481,61 @@ function TripleTickerCompare() {
     ]);
     const [insights, setInsights] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [masterInsight, setMasterInsight] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [loadingStates, setLoadingStates] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([
         false,
         false,
         false
     ]);
     const handleChange = (index, ticker)=>{
-        const updatedTickers = [
+        const updated = [
             ...tickers
         ];
-        updatedTickers[index] = ticker.toUpperCase();
-        setTickers(updatedTickers);
-        // mark index as loading
-        const updatedLoading = [
-            ...loadingStates
-        ];
-        updatedLoading[index] = true;
-        setLoadingStates(updatedLoading);
+        updated[index] = ticker.toUpperCase();
+        setTickers(updated);
     };
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+    const handleCompare = async ()=>{
         const validTickers = tickers.filter((t)=>t.trim().length > 0);
-        const fetchCompare = async ()=>{
-            try {
-                const res = await fetch("http://localhost:8000/compare-summary", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        tickers: validTickers
-                    })
-                });
-                const json = await res.json();
-                const aligned = tickers.map((t)=>json.tickers[t] ?? null);
-                setData(aligned);
-                setInsights(json.insights);
-                setMasterInsight(json.master_insight);
-            } catch (err) {
-                console.error("Compare fetch failed:", err);
-            } finally{
-                setLoadingStates([
-                    false,
-                    false,
-                    false
-                ]);
-            }
-        };
-        if (validTickers.length >= 1) {
-            fetchCompare();
-        } else {
-            setData([
-                null,
-                null,
-                null
+        if (validTickers.length === 0) return;
+        setLoading(true);
+        setLoadingStates([
+            true,
+            true,
+            true
+        ]);
+        setData([
+            null,
+            null,
+            null
+        ]);
+        setInsights([]);
+        setMasterInsight("");
+        try {
+            const res = await fetch(`${("TURBOPACK compile-time value", "https://bullbrief-api.onrender.com")}/compare-summary`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    tickers: validTickers
+                })
+            });
+            const json = await res.json();
+            const aligned = tickers.map((t)=>json.tickers[t] ?? null);
+            setData(aligned);
+            setInsights(json.insights);
+            setMasterInsight(json.master_insight);
+        } catch (err) {
+            console.error("Compare fetch failed:", err);
+        } finally{
+            setLoading(false);
+            setLoadingStates([
+                false,
+                false,
+                false
             ]);
-            setInsights([]);
-            setMasterInsight("");
         }
-    }, [
-        tickers
-    ]);
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "space-y-8",
         children: [
@@ -555,54 +550,78 @@ function TripleTickerCompare() {
                         onSubmit: (val)=>handleChange(i, val)
                     }, i, false, {
                         fileName: "[project]/app/components/TripleTickerCompare.tsx",
-                        lineNumber: 66,
+                        lineNumber: 59,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/components/TripleTickerCompare.tsx",
-                lineNumber: 64,
+                lineNumber: 57,
                 columnNumber: 7
             }, this),
-            insights.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex justify-center",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                    className: "px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow",
+                    onClick: handleCompare,
+                    children: "Compare"
+                }, void 0, false, {
+                    fileName: "[project]/app/components/TripleTickerCompare.tsx",
+                    lineNumber: 69,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/components/TripleTickerCompare.tsx",
+                lineNumber: 68,
+                columnNumber: 7
+            }, this),
+            loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "text-center text-lg font-semibold text-gray-400",
+                children: "BullBrief is analyzing these stocks..."
+            }, void 0, false, {
+                fileName: "[project]/app/components/TripleTickerCompare.tsx",
+                lineNumber: 79,
+                columnNumber: 9
+            }, this),
+            !loading && insights.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid grid-cols-1 md:grid-cols-3 gap-6",
                 children: data.map((d, i)=>d ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$VerticalStatCard$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                         data: d,
                         loading: loadingStates[i]
                     }, i, false, {
                         fileName: "[project]/app/components/TripleTickerCompare.tsx",
-                        lineNumber: 79,
-                        columnNumber: 9
+                        lineNumber: 89,
+                        columnNumber: 15
                     }, this) : null)
             }, void 0, false, {
                 fileName: "[project]/app/components/TripleTickerCompare.tsx",
-                lineNumber: 76,
-                columnNumber: 3
+                lineNumber: 86,
+                columnNumber: 9
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            !loading && insights.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid grid-cols-1 md:grid-cols-3 gap-6",
                 children: insights.map((insight, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$AISummaryBlock$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                         insight: insight
                     }, i, false, {
                         fileName: "[project]/app/components/TripleTickerCompare.tsx",
-                        lineNumber: 89,
-                        columnNumber: 11
+                        lineNumber: 99,
+                        columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/components/TripleTickerCompare.tsx",
-                lineNumber: 87,
-                columnNumber: 7
+                lineNumber: 97,
+                columnNumber: 9
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$MasterCompareSummary$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+            !loading && masterInsight && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$MasterCompareSummary$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 summary: masterInsight
             }, void 0, false, {
                 fileName: "[project]/app/components/TripleTickerCompare.tsx",
-                lineNumber: 94,
-                columnNumber: 7
+                lineNumber: 106,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/TripleTickerCompare.tsx",
-        lineNumber: 62,
+        lineNumber: 55,
         columnNumber: 5
     }, this);
 }
@@ -622,7 +641,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$TripleT
 ;
 function ComparePage() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-        className: "min-h-screen px-6 py-12 bg-black text-white",
+        className: "min-h-screen px-6 pt-20 bg-black text-white",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                 className: "text-4xl font-bold mb-8 text-blue-400 text-center",

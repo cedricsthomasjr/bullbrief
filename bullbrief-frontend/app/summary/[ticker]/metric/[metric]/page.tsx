@@ -23,10 +23,12 @@ export default function MetricDetailPage() {
     const fetchData = async () => {
       setDataLoading(true);
       try {
+        const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  
         const endpoint =
           ["eps", "revenue"].includes(metric.toLowerCase())
-            ? `http://localhost:8000/metric/${ticker}/${metric}` // <— use new clean route
-            : `http://localhost:8000/macrotrends/${ticker}`;
+            ? `${baseURL}/metric/${ticker}/${metric}`
+            : `${baseURL}/macrotrends/${ticker}`;
   
         const res = await fetch(endpoint);
         const json = await res.json();
@@ -64,22 +66,22 @@ export default function MetricDetailPage() {
 
   useEffect(() => {
     if (!ticker || !metric) return;
-
+  
     const fetchAISummary = async () => {
       setSummaryLoading(true);
       try {
-        const res = await fetch(`http://localhost:8000/interpret/${ticker}?metric=${metric}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/interpret/${ticker}?metric=${metric}`);
         const json = await res.json();
         setAiSummary(json.analysis ?? null);
-      } catch (err) {
-        setAiSummary(null);
-      } finally {
+      } 
+       finally {
         setSummaryLoading(false);
       }
     };
-
+  
     fetchAISummary();
   }, [ticker, metric]);
+  
 
   if (dataLoading) return <LoadingScreen />;
 

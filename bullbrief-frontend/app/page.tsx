@@ -1,20 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import TickerInput from "@/app/components/TickerInput";
 
 export default function HomePage() {
   const router = useRouter();
-  const [ticker, setTicker] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!ticker.trim()) return;
-    router.push(`/summary/${ticker.toUpperCase()}?ticker=${ticker.toUpperCase()}`);
-  };
-
+ 
   return (
     <main className="relative min-h-screen flex items-center justify-center bg-black text-white px-6 overflow-hidden">
 

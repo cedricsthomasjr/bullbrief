@@ -70,10 +70,11 @@ export default function MetricChart({ data, title }: Props) {
           <Tooltip
             contentStyle={{ backgroundColor: "#1f2937", border: "none" }}
             labelStyle={{ color: "#ccc" }}
-            formatter={(value: any) => {
+            formatter={(value: number | string) => {
               const num = typeof value === "number" ? value : parseFloat(value);
               return isNaN(num) ? "-" : formatNumber(num);
             }}
+            
           />
           <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ color: '#ccc' }} />
           <Line

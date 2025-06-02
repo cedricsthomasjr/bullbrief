@@ -24,7 +24,7 @@ export default function EPSChartCard({ ticker }: { ticker: string }) {
   useEffect(() => {
     const fetchEPS = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/eps-history/${ticker}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/eps-history/${ticker}`);
         const json = await res.json();
         const sorted = [...json.eps_history].sort(
           (a, b) => parseInt(a.year) - parseInt(b.year)

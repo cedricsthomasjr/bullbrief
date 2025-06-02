@@ -1031,6 +1031,10 @@
     padding-top: calc(var(--spacing) * 6);
   }
 
+  .pt-20 {
+    padding-top: calc(var(--spacing) * 20);
+  }
+
   .pt-24 {
     padding-top: calc(var(--spacing) * 24);
   }
@@ -1375,6 +1379,12 @@
   @media (hover: hover) {
     .hover\:bg-blue-600:hover {
       background-color: var(--color-blue-600);
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-blue-700:hover {
+      background-color: var(--color-blue-700);
     }
   }
 

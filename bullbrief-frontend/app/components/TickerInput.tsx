@@ -26,7 +26,8 @@ export default function TickerInput() {
 
     const fetchSuggestions = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/search/${query}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/search/${query}`)
+
         const data = await res.json();
         setSuggestions(data);
         setShowDropdown(true);
@@ -104,13 +105,14 @@ export default function TickerInput() {
               ))
             ) : (
               <li
-                onClick={() => handleSelect(query)}
-                className={`px-4 py-2 cursor-pointer text-white transition ${
-                  activeIndex === 0 ? "bg-blue-600" : "hover:bg-zinc-700"
-                }`}
-              >
-                🔍 Search <span className="font-semibold">"{query}"</span>
-              </li>
+  onClick={() => handleSelect(query)}
+  className={`px-4 py-2 cursor-pointer text-white transition ${
+    activeIndex === 0 ? "bg-blue-600" : "hover:bg-zinc-700"
+  }`}
+>
+  🔍 Search <span className="font-semibold">&quot;{query}&quot;</span>
+</li>
+
             )}
           </motion.ul>
         )}

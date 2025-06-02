@@ -564,6 +564,7 @@ var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_
 __turbopack_context__.s({
     "default": (()=>EPSChartCard)
 });
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/recharts/es6/component/ResponsiveContainer.js [app-client] (ecmascript)");
@@ -588,7 +589,7 @@ function EPSChartCard({ ticker }) {
             const fetchEPS = {
                 "EPSChartCard.useEffect.fetchEPS": async ()=>{
                     try {
-                        const res = await fetch(`http://localhost:8000/eps-history/${ticker}`);
+                        const res = await fetch(`${("TURBOPACK compile-time value", "https://bullbrief-api.onrender.com")}/eps-history/${ticker}`);
                         const json = await res.json();
                         const sorted = [
                             ...json.eps_history
@@ -1242,6 +1243,7 @@ var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_
 __turbopack_context__.s({
     "default": (()=>TickerPage)
 });
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
@@ -1278,24 +1280,22 @@ function TickerPage() {
             const fetchData = {
                 "TickerPage.useEffect.fetchData": async ()=>{
                     try {
-                        const res = await fetch(`http://localhost:8000/summary/${ticker}`);
+                        const res = await fetch(`${("TURBOPACK compile-time value", "https://bullbrief-api.onrender.com")}/summary/${ticker}`);
                         const json = await res.json();
                         if (res.ok) setData(json);
                         else setError(json.error || "Unknown error");
-                    } catch (e) {
-                        setError("Could not connect to backend.");
                     } finally{
                         setLoading(false);
                     }
                     try {
-                        const res = await fetch(`http://localhost:8000/news/${ticker}`);
+                        const res = await fetch(`${("TURBOPACK compile-time value", "https://bullbrief-api.onrender.com")}/news/${ticker}`);
                         const json = await res.json();
                         setNews(json.news || []);
                     } catch (err) {
                         console.error("Failed to fetch news:", err);
                     }
                     try {
-                        const res = await fetch(`http://localhost:8000/executives/${ticker}`);
+                        const res = await fetch(`${("TURBOPACK compile-time value", "https://bullbrief-api.onrender.com")}/executives/${ticker}`);
                         const json = await res.json();
                         setExecs(json.executives || []);
                     } catch (err) {
@@ -1312,7 +1312,7 @@ function TickerPage() {
         isLoading: loading
     }, void 0, false, {
         fileName: "[project]/app/summary/[ticker]/page.tsx",
-        lineNumber: 99,
+        lineNumber: 96,
         columnNumber: 12
     }, this);
     if (error) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1323,7 +1323,7 @@ function TickerPage() {
         ]
     }, void 0, true, {
         fileName: "[project]/app/summary/[ticker]/page.tsx",
-        lineNumber: 101,
+        lineNumber: 98,
         columnNumber: 12
     }, this);
     if (!data) return null;
@@ -1341,14 +1341,14 @@ function TickerPage() {
                                 className: "w-4 h-4 mr-2"
                             }, void 0, false, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 113,
+                                lineNumber: 110,
                                 columnNumber: 3
                             }, this),
                             "Back to Home"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 109,
+                        lineNumber: 106,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -1365,13 +1365,13 @@ function TickerPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 117,
+                                lineNumber: 114,
                                 columnNumber: 31
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 116,
+                        lineNumber: 113,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1386,13 +1386,13 @@ function TickerPage() {
                                         children: data.sector
                                     }, void 0, false, {
                                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                        lineNumber: 121,
+                                        lineNumber: 118,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 120,
+                                lineNumber: 117,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1403,7 +1403,7 @@ function TickerPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 123,
+                                lineNumber: 120,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1414,7 +1414,7 @@ function TickerPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 126,
+                                lineNumber: 123,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1425,19 +1425,19 @@ function TickerPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 129,
+                                lineNumber: 126,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 119,
+                        lineNumber: 116,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 108,
+                lineNumber: 105,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1447,7 +1447,7 @@ function TickerPage() {
                         children: "📈 Stock Performance"
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 137,
+                        lineNumber: 134,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1456,18 +1456,18 @@ function TickerPage() {
                             symbol: data.exchange_symbol
                         }, void 0, false, {
                             fileName: "[project]/app/summary/[ticker]/page.tsx",
-                            lineNumber: 139,
+                            lineNumber: 136,
                             columnNumber: 9
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 138,
+                        lineNumber: 135,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 136,
+                lineNumber: 133,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1477,7 +1477,7 @@ function TickerPage() {
                         children: "📊 Explore Metrics"
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 143,
+                        lineNumber: 140,
                         columnNumber: 3
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1490,12 +1490,12 @@ function TickerPage() {
                                     children: "Revenue"
                                 }, void 0, false, {
                                     fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                    lineNumber: 146,
+                                    lineNumber: 143,
                                     columnNumber: 7
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 145,
+                                lineNumber: 142,
                                 columnNumber: 5
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1505,24 +1505,24 @@ function TickerPage() {
                                     children: "EPS"
                                 }, void 0, false, {
                                     fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                    lineNumber: 151,
+                                    lineNumber: 148,
                                     columnNumber: 7
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 150,
+                                lineNumber: 147,
                                 columnNumber: 5
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 144,
+                        lineNumber: 141,
                         columnNumber: 3
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 142,
+                lineNumber: 139,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1532,7 +1532,7 @@ function TickerPage() {
                         children: "📌 Business Summary"
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 163,
+                        lineNumber: 160,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1540,20 +1540,20 @@ function TickerPage() {
                         children: data.business_summary
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 164,
+                        lineNumber: 161,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 162,
+                lineNumber: 159,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$SWOTCard$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 content: data.swot
             }, void 0, false, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 170,
+                lineNumber: 167,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1563,7 +1563,7 @@ function TickerPage() {
                         children: "🔮 Outlook"
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 175,
+                        lineNumber: 172,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1571,13 +1571,13 @@ function TickerPage() {
                         children: data.outlook
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 176,
+                        lineNumber: 173,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 174,
+                lineNumber: 171,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1585,8 +1585,21 @@ function TickerPage() {
                     data: data
                 }, void 0, false, {
                     fileName: "[project]/app/summary/[ticker]/page.tsx",
-                    lineNumber: 183,
+                    lineNumber: 180,
                     columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/summary/[ticker]/page.tsx",
+                lineNumber: 179,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                children: execs.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ExecutiveGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                    execs: execs
+                }, void 0, false, {
+                    fileName: "[project]/app/summary/[ticker]/page.tsx",
+                    lineNumber: 183,
+                    columnNumber: 28
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
@@ -1600,7 +1613,7 @@ function TickerPage() {
                         children: "📰 Recent News"
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 188,
+                        lineNumber: 189,
                         columnNumber: 9
                     }, this),
                     news.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1608,7 +1621,7 @@ function TickerPage() {
                         children: "No recent news found."
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 190,
+                        lineNumber: 191,
                         columnNumber: 13
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid gap-4",
@@ -1623,7 +1636,7 @@ function TickerPage() {
                                         children: item.title
                                     }, void 0, false, {
                                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                        lineNumber: 201,
+                                        lineNumber: 202,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1636,37 +1649,30 @@ function TickerPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                        lineNumber: 202,
+                                        lineNumber: 203,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, idx, true, {
                                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                                lineNumber: 194,
+                                lineNumber: 195,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/summary/[ticker]/page.tsx",
-                        lineNumber: 192,
+                        lineNumber: 193,
                         columnNumber: 15
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 187,
+                lineNumber: 188,
                 columnNumber: 7
-            }, this),
-            execs.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ExecutiveGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                execs: execs
-            }, void 0, false, {
-                fileName: "[project]/app/summary/[ticker]/page.tsx",
-                lineNumber: 211,
-                columnNumber: 22
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/summary/[ticker]/page.tsx",
-        lineNumber: 105,
+        lineNumber: 102,
         columnNumber: 5
     }, this);
 }

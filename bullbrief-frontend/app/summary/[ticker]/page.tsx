@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import TradingViewMiniChart from "@//app/components/TradingViewMiniChart";
 import SWOTCard from "@//app/components/SWOTCard";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -65,24 +64,22 @@ const [execs, setExecs] = useState<
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/summary/${ticker}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/summary/${ticker}`);
         const json = await res.json();
         if (res.ok) setData(json);
         else setError(json.error || "Unknown error");
-      } catch (e) {
-        setError("Could not connect to backend.");
-      } finally {
+      }  finally {
         setLoading(false);
       }
       try {
-        const res = await fetch(`http://localhost:8000/news/${ticker}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/news/${ticker}`);
         const json = await res.json();
         setNews(json.news || []);
       } catch (err) {
         console.error("Failed to fetch news:", err);
       }
       try {
-        const res = await fetch(`http://localhost:8000/executives/${ticker}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/executives/${ticker}`);
         const json = await res.json();
         setExecs(json.executives || []);
       } catch (err) {
@@ -182,6 +179,10 @@ const [execs, setExecs] = useState<
       <section>
         <FinancialMetricsGrid data={data} />  
       </section>
+      <section>
+      {execs.length > 0 && <ExecutiveGrid execs={execs} />}
+
+      </section>
 
       {/* News Section */}
       <section>
@@ -208,7 +209,6 @@ const [execs, setExecs] = useState<
     </div>
   )}
 </section>
-{execs.length > 0 && <ExecutiveGrid execs={execs} />}
 </main>
   );
 }
