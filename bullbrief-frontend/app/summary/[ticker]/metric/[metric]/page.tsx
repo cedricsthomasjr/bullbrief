@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import MetricChart from "@/app/components/MetricChart";
 import LoadingScreen from "@/app/components/LoadingScreen";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function MetricDetailPage() {
   const { ticker, metric } = useParams() as { ticker: string; metric: string };
@@ -12,112 +14,122 @@ export default function MetricDetailPage() {
   const lastGoodData = useRef<{ year: number; value: number }[] | null>(null);
   const [dataLoading, setDataLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(true);
+
   const bulletPoints = aiSummary
-  ?.split("\n")
-  .filter((line) => line.trim().startsWith("-"))
-  .map((line) => line.replace(/^- /, "").trim());
+    ?.split("\n")
+    .filter((line) => line.trim().startsWith("-"))
+    .map((line) => line.replace(/^- /, "").trim());
 
   useEffect(() => {
     if (!ticker || !metric) return;
-  
     const fetchData = async () => {
       setDataLoading(true);
       try {
         const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-  
-        const endpoint =
-          ["eps", "revenue"].includes(metric.toLowerCase())
-            ? `${baseURL}/metric/${ticker}/${metric}`
-            : `${baseURL}/macrotrends/${ticker}`;
-  
+        const endpoint = ["eps", "revenue"].includes(metric.toLowerCase())
+          ? `${baseURL}/metric/${ticker}/${metric}`
+          : `${baseURL}/macrotrends/${ticker}`;
         const res = await fetch(endpoint);
         const json = await res.json();
-  
-        let extractedData = null;
-  
+        let extracted = null;
         if (["eps", "revenue"].includes(metric.toLowerCase())) {
-          extractedData = json.data;
+          extracted = json.data;
         } else {
-          const metricKey = Object.keys(json.data).find(
-            (k) => k.toLowerCase() === metric.toLowerCase()
-          );
-          extractedData = metricKey && Array.isArray(json.data[metricKey])
-            ? json.data[metricKey]
-            : null;
+          const key = Object.keys(json.data).find((k) => k.toLowerCase() === metric.toLowerCase());
+          extracted = key && Array.isArray(json.data[key]) ? json.data[key] : null;
         }
-  
-        if (extractedData) {
-          lastGoodData.current = extractedData;
-          setData(extractedData);
-        } else {
-          setData(lastGoodData.current);
-        }
-      } catch (e) {
-        console.error("Failed to fetch metric data:", e);
-        setData(lastGoodData.current);
-      } finally {
-        setDataLoading(false);
-      }
+        if (extracted) { lastGoodData.current = extracted; setData(extracted); }
+        else setData(lastGoodData.current);
+      } catch { setData(lastGoodData.current); }
+      finally { setDataLoading(false); }
     };
-  
     fetchData();
   }, [ticker, metric]);
-  
 
   useEffect(() => {
     if (!ticker || !metric) return;
-  
-    const fetchAISummary = async () => {
+    const fetchAI = async () => {
       setSummaryLoading(true);
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/interpret/${ticker}?metric=${metric}`);
         const json = await res.json();
         setAiSummary(json.analysis ?? null);
-      } 
-       finally {
-        setSummaryLoading(false);
-      }
+      } finally { setSummaryLoading(false); }
     };
-  
-    fetchAISummary();
+    fetchAI();
   }, [ticker, metric]);
-  
 
   if (dataLoading) return <LoadingScreen />;
 
   return (
-<div className="max-w-5xl mx-auto px-6 pt-24 pb-12 text-white space-y-10">
-  <h1 className="text-4xl font-bold capitalize tracking-tight">
-    {metric} – {ticker}
-  </h1>
+    <main className="min-h-screen pt-14" style={{ backgroundColor: "#060c1a" }}>
+      <div className="max-w-5xl mx-auto px-6 py-12 space-y-12">
+        {/* Header */}
+        <div className="space-y-3 pt-2">
+          <Link href={`/summary/${ticker}`} className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-sky-400 transition-colors">
+            <ArrowLeft className="w-3 h-3" /> Back to {ticker}
+          </Link>
+          <div>
+            <p className="text-[10px] font-bold text-sky-400 uppercase tracking-widest mb-1">{ticker}</p>
+            <h1 className="text-4xl font-bold tracking-tighter text-blue-50 capitalize">{metric}</h1>
+          </div>
+        </div>
 
-  {/* Chart Section */}
-  <section className="space-y-6">
-    <MetricChart data={data} title={metric} />
-  </section>
+        {/* Chart */}
+        <section
+          className="rounded-2xl p-6"
+          style={{ backgroundColor: "#0c1829", border: "1px solid rgba(56,189,248,0.1)" }}
+        >
+          <MetricChart data={data} title={metric} />
+        </section>
 
-  {/* AI Interpretation Section */}
-  <section className="space-y-6">
-    <h2 className="text-2xl font-semibold text-white tracking-tight">🧠 AI Interpretation</h2>
+        {/* AI Interpretation */}
+        <section className="space-y-5">
+          <div className="flex items-center gap-3">
+            <span
+              className="text-[10px] font-mono font-bold tabular-nums px-2 py-0.5 rounded"
+              style={{ color: "#818cf8", backgroundColor: "rgba(129,140,248,0.08)", border: "1px solid rgba(129,140,248,0.2)" }}
+            >
+              AI
+            </span>
+            <h2 className="text-lg font-bold text-blue-50">AI Interpretation</h2>
+            <div className="flex-1 h-px" style={{ background: "rgba(56,189,248,0.07)" }} />
+          </div>
 
-    {summaryLoading ? (
-      <p className="text-gray-500 italic animate-pulse">Generating summary...</p>
-    ) : bulletPoints && bulletPoints.length > 0 ? (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {bulletPoints.map((point, idx) => {
-          const [title, ...rest] = point.split(":");
-          return (
-            <div key={idx} className="bg-zinc-900 border border-zinc-700 p-5 rounded-xl shadow hover:shadow-md transition">
-              <p className="text-blue-400 font-semibold mb-1">{title}</p>
-              <p className="text-gray-300 text-sm leading-relaxed">{rest.join(":").trim()}</p>
+          {summaryLoading ? (
+            <div className="flex items-center gap-3">
+              <div
+                className="w-4 h-4 rounded-full animate-spin"
+                style={{ borderTop: "2px solid #818cf8", borderRight: "2px solid transparent", borderBottom: "2px solid transparent", borderLeft: "2px solid transparent" }}
+              />
+              <p className="text-xs text-slate-600">Generating analysis...</p>
             </div>
-          );
-        })}
+          ) : bulletPoints && bulletPoints.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {bulletPoints.map((point, idx) => {
+                const [title, ...rest] = point.split(":");
+                return (
+                  <div
+                    key={idx}
+                    className="rounded-xl p-5 space-y-1.5 transition-all"
+                    style={{
+                      backgroundColor: "rgba(129,140,248,0.05)",
+                      border: "1px solid rgba(129,140,248,0.15)",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(129,140,248,0.09)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(129,140,248,0.05)")}
+                  >
+                    <p className="text-xs font-bold text-indigo-400">{title}</p>
+                    <p className="text-sm text-slate-400 leading-relaxed">{rest.join(":").trim()}</p>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-rose-400 text-sm italic">Could not generate summary.</p>
+          )}
+        </section>
       </div>
-    ) : (
-      <p className="text-red-500 italic">Could not generate summary.</p>
-    )}
-  </section>
-</div>
+    </main>
   );
 }

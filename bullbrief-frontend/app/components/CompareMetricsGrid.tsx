@@ -1,48 +1,71 @@
 type CompanyMetric = {
-    ticker: string;
-    market_cap: number | null;
-    pe_ratio: number | null;
-    roe: number | null;
-    profit_margin: number | null;
-  };
-  
-  export default function CompareMetricsGrid({ data }: { data: CompanyMetric[] | undefined }) {
-    if (!data || !Array.isArray(data) || data.length === 0) {
-      return (
-        <div className="text-white text-center p-6 border border-red-500 rounded-lg">
-          <p className="text-red-400">No comparison data available.</p>
-        </div>
-      );
-    }
-  
-    const renderValue = (value: number | null, suffix = "", divisor = 1) =>
-      value != null ? `${(value / divisor).toFixed(2)}${suffix}` : <span className="text-gray-500 italic">—</span>;
-  
+  ticker: string;
+  market_cap: number | null;
+  pe_ratio: number | null;
+  roe: number | null;
+  profit_margin: number | null;
+};
+
+export default function CompareMetricsGrid({ data }: { data: CompanyMetric[] | undefined }) {
+  if (!data || !Array.isArray(data) || data.length === 0) {
     return (
-      <div className="overflow-x-auto mt-6 pt-6 border border-zinc-800 rounded-lg">
-        <table className="table-auto w-full text-left text-sm text-white">
-          <thead className="bg-zinc-900">
-            <tr>
-              <th className="p-2">Ticker</th>
-              <th className="p-2">Market Cap</th>
-              <th className="p-2">P/E</th>
-              <th className="p-2">ROE</th>
-              <th className="p-2">Profit Margin</th>
+      <div
+        className="rounded-2xl p-6"
+        style={{ backgroundColor: "#0c1829", border: "1px solid rgba(244,63,94,0.2)" }}
+      >
+        <p className="text-rose-400 text-sm">No comparison data available.</p>
+      </div>
+    );
+  }
+
+  const renderValue = (value: number | null, suffix = "", divisor = 1) =>
+    value != null
+      ? `${(value / divisor).toFixed(2)}${suffix}`
+      : <span style={{ color: "#1e293b" }}>—</span>;
+
+  const columns = [
+    { label: "Market Cap",    key: "market_cap" as const, suffix: "B", divisor: 1e9 },
+    { label: "P/E Ratio",     key: "pe_ratio" as const },
+    { label: "ROE",           key: "roe" as const, suffix: "%", divisor: 0.01 },
+    { label: "Profit Margin", key: "profit_margin" as const, suffix: "%", divisor: 0.01 },
+  ];
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{ backgroundColor: "#0c1829", border: "1px solid rgba(56,189,248,0.12)" }}
+    >
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr style={{ borderBottom: "1px solid rgba(56,189,248,0.08)" }}>
+              <th className="text-left px-5 py-3.5 text-[10px] font-bold uppercase tracking-widest text-sky-400">Ticker</th>
+              {columns.map((col) => (
+                <th key={col.key} className="text-left px-5 py-3.5 text-[10px] font-medium uppercase tracking-widest text-slate-600">
+                  {col.label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {data.map((c) => (
-              <tr key={c.ticker} className="hover:bg-zinc-800 transition">
-                <td className="p-2 font-bold">{c.ticker}</td>
-                <td className="p-2">{renderValue(c.market_cap, "B", 1e9)}</td>
-                <td className="p-2">{renderValue(c.pe_ratio)}</td>
-                <td className="p-2">{renderValue(c.roe, "%", 0.01)}</td>
-                <td className="p-2">{renderValue(c.profit_margin, "%", 0.01)}</td>
+            {data.map((c, i) => (
+              <tr
+                key={c.ticker}
+                style={{ borderBottom: i < data.length - 1 ? "1px solid rgba(56,189,248,0.05)" : "none" }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(56,189,248,0.03)")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+              >
+                <td className="px-5 py-4 font-bold text-blue-50 font-mono">{c.ticker}</td>
+                {columns.map((col) => (
+                  <td key={col.key} className="px-5 py-4 text-slate-400 tabular-nums text-sm">
+                    {renderValue(c[col.key], col.suffix, col.divisor)}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

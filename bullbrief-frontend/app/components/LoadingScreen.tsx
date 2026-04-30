@@ -3,77 +3,80 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const funFacts = [
-    "📈 Warren Buffett bought his first stock at age 11.",
-    "💰 The S&P 500 has averaged ~10% annual returns since inception.",
-    "🏦 The NYSE was founded in 1792 under a buttonwood tree on Wall Street.",
-    "🚗 Tesla first turned a profit in Q3 of 2019.",
-    "🧠 Peter Lynch averaged 29% annual returns managing the Magellan Fund.",
-    "🌍 Only ~60 companies in the world have a $200B+ market cap.",
-    "📉 The largest single-day Dow drop was -2,997 points on March 16, 2020.",
-    "📱 Apple’s market cap once surpassed the GDP of the UK.",
-    "🔁 Stock market corrections (10%+ drops) happen every 1-2 years on average.",
-    "📆 October is historically the most volatile month for U.S. stocks.",
-    "🧾 Dividends account for roughly 40% of total S&P 500 returns over time.",
-    "🧮 The P/E ratio is one of the most common valuation metrics investors use.",
-    "🌡️ Inflation eats away at returns — that's why real return > nominal return.",
-    "📦 Amazon didn’t turn a yearly profit until 2003 — 9 years after launching.",
-    "🎯 Dollar-cost averaging can reduce timing risk over long investment periods.",
-    "🧬 The Nasdaq is more tech-heavy, while the Dow is price-weighted.",
-    "📉 Bear markets typically last less than a year, while bull markets last ~3.8 years on average.",
-    "💸 Buying during fear can outperform selling during hype.",
-    "🚀 In 2020, retail investors drove GameStop up over 1,700% in a month.",
-    "🌎 U.S. stocks make up ~60% of the global equity market cap.",
-    "🔄 The VIX is a volatility index — often called the market’s “fear gauge.”",
-    "🔒 Bonds are generally less volatile than stocks, but offer lower returns.",
-    "🪙 Bitcoin was worth less than a penny in 2010 — now over $60,000 at peak.",
-    "🏛️ The Fed doesn’t set stock prices, but it heavily influences them via rates.",
-    "📚 Long-term investing tends to outperform short-term trading for most investors.",
-  ];
+const facts = [
+  "Warren Buffett bought his first stock at age 11.",
+  "The S&P 500 has averaged ~10% annual returns since inception.",
+  "Peter Lynch averaged 29% annual returns managing the Magellan Fund.",
+  "Only ~60 companies in the world have a $200B+ market cap.",
+  "Dividends account for ~40% of total S&P 500 returns over time.",
+  "Amazon didn't turn a yearly profit until 2003 — 9 years after launching.",
+  "Dollar-cost averaging can reduce timing risk over long investment periods.",
+  "Bear markets typically last less than a year; bull markets ~3.8 years on average.",
+  "The VIX is often called the market's fear gauge.",
+  "U.S. stocks make up ~60% of the global equity market cap.",
+  "Tesla first turned a profit in Q3 of 2019.",
+  "The NYSE was founded in 1792 under a buttonwood tree on Wall Street.",
+];
 
-  export default function LoadingScreen({ isLoading = true }: { isLoading?: boolean }) {
-    const [currentFactIndex, setCurrentFactIndex] = useState(0);
+export default function LoadingScreen({ isLoading = true }: { isLoading?: boolean }) {
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
     if (!isLoading) return;
-
-    const interval = setInterval(() => {
-      setCurrentFactIndex((prev) => (prev + 1) % funFacts.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
+    const t = setInterval(() => setIdx((p) => (p + 1) % facts.length), 3200);
+    return () => clearInterval(t);
   }, [isLoading]);
 
   return (
     <AnimatePresence>
       {isLoading && (
         <motion.div
-          className="fixed inset-0 z-50 bg-black text-white flex flex-col items-center justify-center space-y-6 px-4 text-center"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8"
+          style={{ backgroundColor: "#060c1a" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <motion.h1
-            className="text-2xl font-semibold text-blue-400"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            Generating Summary...
-          </motion.h1>
+          {/* Glow backdrop */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse at 50% 40%, rgba(56,189,248,0.08) 0%, transparent 65%)",
+            }}
+          />
 
-          <motion.p
-            key={currentFactIndex}
-            className="text-sm text-gray-300 max-w-md"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5 }}
-          >
-            {funFacts[currentFactIndex]}
-          </motion.p>
+          {/* Spinner */}
+          <div className="relative w-12 h-12">
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{ border: "1px solid rgba(56,189,248,0.1)" }}
+            />
+            <div
+              className="absolute inset-0 rounded-full animate-spin"
+              style={{ borderTop: "2px solid #38bdf8", borderRight: "2px solid transparent", borderBottom: "2px solid transparent", borderLeft: "2px solid transparent" }}
+            />
+            <div
+              className="absolute inset-2 rounded-full"
+              style={{ backgroundColor: "rgba(56,189,248,0.04)" }}
+            />
+          </div>
 
-          <div className="h-8 w-8 rounded-full border-t-2 border-blue-400 border-opacity-50 animate-spin" />
+          <div className="text-center space-y-3 max-w-sm px-6 relative">
+            <p className="text-sm font-semibold text-blue-50">Generating Analysis</p>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={idx}
+                className="text-xs text-slate-600 leading-relaxed"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.4 }}
+              >
+                {facts[idx]}
+              </motion.p>
+            </AnimatePresence>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BullBrief",
+  title: "BullBrief — AI Stock Intelligence",
   description: "AI-powered stock breakdowns for modern investors.",
 };
 
@@ -27,14 +27,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-black text-white h-full">
+    <html lang="en" style={{ backgroundColor: "#060c1a" }}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen flex flex-col bg-black text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen flex flex-col`}
+        style={{ backgroundColor: "#060c1a", color: "#eff6ff" }}
       >
         <Navbar />
-        <main className="flex-grow bg-black text-white px-6 md:px-16 pb-32 font-sans space-y-16">
+        <div className="flex-grow">
           {children}
-        </main>
+        </div>
         <Footer />
       </body>
     </html>

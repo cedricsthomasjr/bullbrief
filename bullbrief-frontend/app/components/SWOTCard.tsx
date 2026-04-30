@@ -2,60 +2,61 @@
 
 import React from "react";
 
-type SWOTProps = {
-  content: string;
-};
+type SWOTProps = { content: string };
 
-const parseSWOTSection = (label: string, content: string) => {
+const parseSWOTSection = (label: string, content: string): string[] => {
   const match = new RegExp(`\\*\\*${label}:\\*\\*[\\s\\n\\r]+([-\\s\\S]+?)(?=\\*\\*|$)`, "i").exec(content);
   if (!match) return [];
   return match[1]
     .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.startsWith("-"))
-    .map((line) => line.replace(/^-\s*/, ""));
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith("-"))
+    .map((l) => l.replace(/^-\s*/, ""));
 };
 
-export default function SWOTCard({ content }: SWOTProps) {
-  const strengths = parseSWOTSection("Strengths", content);
-  const weaknesses = parseSWOTSection("Weaknesses", content);
-  const opportunities = parseSWOTSection("Opportunities", content);
-  const threats = parseSWOTSection("Threats", content);
+const SWOT_CONFIG = {
+  Strengths:     { color: "#10b981", bg: "rgba(16,185,129,0.05)",  border: "rgba(16,185,129,0.2)",  dot: "bg-emerald-400" },
+  Weaknesses:    { color: "#f43f5e", bg: "rgba(244,63,94,0.05)",   border: "rgba(244,63,94,0.2)",   dot: "bg-rose-400" },
+  Opportunities: { color: "#38bdf8", bg: "rgba(56,189,248,0.05)",  border: "rgba(56,189,248,0.2)",  dot: "bg-sky-400" },
+  Threats:       { color: "#f59e0b", bg: "rgba(245,158,11,0.05)",  border: "rgba(245,158,11,0.2)",  dot: "bg-amber-400" },
+};
 
+function SWOTSection({ title, points }: { title: keyof typeof SWOT_CONFIG; points: string[] }) {
+  const c = SWOT_CONFIG[title];
   return (
-    <section className="grid md:grid-cols-2 gap-6 mt-8">
-      <div className="bg-zinc-900 border border-zinc-700 p-6 rounded-xl">
-        <h3 className="text-xl font-bold text-green-400 mb-2">Strengths</h3>
-        <ul className="list-disc list-inside text-gray-200 space-y-1">
-          {strengths.map((point, i) => (
-            <li key={`s-${i}`}>{point}</li>
+    <div className="rounded-2xl p-5 space-y-3" style={{ backgroundColor: c.bg, border: `1px solid ${c.border}` }}>
+      <div className="flex items-center gap-2">
+        <span className={`w-2 h-2 rounded-full ${c.dot}`} />
+        <h3
+          className="text-[10px] font-bold uppercase tracking-widest"
+          style={{ color: c.color }}
+        >
+          {title}
+        </h3>
+      </div>
+      {points.length > 0 ? (
+        <ul className="space-y-2">
+          {points.map((p, i) => (
+            <li key={i} className="flex items-start gap-2.5 text-sm text-slate-400 leading-relaxed">
+              <span className="shrink-0 mt-2 w-1 h-1 rounded-full" style={{ backgroundColor: c.color, opacity: 0.5 }} />
+              {p}
+            </li>
           ))}
         </ul>
-      </div>
-      <div className="bg-zinc-900 border border-zinc-700 p-6 rounded-xl">
-        <h3 className="text-xl font-bold text-red-400 mb-2">Weaknesses</h3>
-        <ul className="list-disc list-inside text-gray-200 space-y-1">
-          {weaknesses.map((point, i) => (
-            <li key={`w-${i}`}>{point}</li>
-          ))}
-        </ul>
-      </div>
-      <div className="bg-zinc-900 border border-zinc-700 p-6 rounded-xl">
-        <h3 className="text-xl font-bold text-blue-400 mb-2">Opportunities</h3>
-        <ul className="list-disc list-inside text-gray-200 space-y-1">
-          {opportunities.map((point, i) => (
-            <li key={`o-${i}`}>{point}</li>
-          ))}
-        </ul>
-      </div>
-      <div className="bg-zinc-900 border border-zinc-700 p-6 rounded-xl">
-        <h3 className="text-xl font-bold text-yellow-400 mb-2">Threats</h3>
-        <ul className="list-disc list-inside text-gray-200 space-y-1">
-          {threats.map((point, i) => (
-            <li key={`t-${i}`}>{point}</li>
-          ))}
-        </ul>
-      </div>
-    </section>
+      ) : (
+        <p className="text-slate-700 text-xs italic">No data available.</p>
+      )}
+    </div>
+  );
+}
+
+export default function SWOTCard({ content }: SWOTProps) {
+  return (
+    <div className="grid md:grid-cols-2 gap-4">
+      <SWOTSection title="Strengths"     points={parseSWOTSection("Strengths", content)} />
+      <SWOTSection title="Weaknesses"    points={parseSWOTSection("Weaknesses", content)} />
+      <SWOTSection title="Opportunities" points={parseSWOTSection("Opportunities", content)} />
+      <SWOTSection title="Threats"       points={parseSWOTSection("Threats", content)} />
+    </div>
   );
 }
